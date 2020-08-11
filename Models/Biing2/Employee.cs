@@ -10,7 +10,6 @@ namespace Biing2WPF.Biing2
     public class Employee : MemoryObject, INotifyPropertyChanged
     {
         #region private members
-        private uint index;
         private Gender gender;
         private int iq;
         private int height;
@@ -176,6 +175,7 @@ namespace Biing2WPF.Biing2
                     return;
                 }
                 prof1 = value;
+                Memory.Write(pHandle, baseAddress + 0x1, (byte)value);
                 OnPropertyChanged();
             }
         }
@@ -189,6 +189,7 @@ namespace Biing2WPF.Biing2
                     return;
                 }
                 exp1 = value;
+                Memory.Write(pHandle, baseAddress + 0x56, (uint)value);
                 OnPropertyChanged();
             }
         }
@@ -201,6 +202,7 @@ namespace Biing2WPF.Biing2
                     return;
                 }
                 prof2 = value;
+                Memory.Write(pHandle, baseAddress + 0x2, (byte)value);
                 OnPropertyChanged();
             }
         }
@@ -214,6 +216,7 @@ namespace Biing2WPF.Biing2
                     return;
                 }
                 exp2 = value;
+                Memory.Write(pHandle, baseAddress + 0x5A, (uint)value);
                 OnPropertyChanged();
             }
         }
@@ -226,6 +229,7 @@ namespace Biing2WPF.Biing2
                     return;
                 }
                 prof3 = value;
+                Memory.Write(pHandle, baseAddress + 0x3, (byte)value);
                 OnPropertyChanged();
             }
         }
@@ -239,6 +243,7 @@ namespace Biing2WPF.Biing2
                     return;
                 }
                 exp3 = value;
+                Memory.Write(pHandle, baseAddress + 0x5E, (uint)value);
                 OnPropertyChanged();
             }
         }

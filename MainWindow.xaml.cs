@@ -1,4 +1,5 @@
-﻿using Biing2WPF.ViewModels;
+﻿using Biing2WPF.Biing2;
+using Biing2WPF.ViewModels;
 using System.Diagnostics;
 using System.Windows;
 
