@@ -34,7 +34,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Label Grid.Column="0" Content="Employees" FontSize="14" FontWeight="Bold" />
-                    <CheckBox Grid.Column="1" Content="Active Employees" VerticalAlignment="Center" IsChecked="{Binding IsActiveOnlyEmployees}" />
+                    <CheckBox Grid.Column="1" Content="Active Employees" VerticalAlignment="Center" Command="{Binding FilterActiveEmployees}" IsChecked="{Binding IsActiveOnlyEmployees}" />
                 </Grid>
             </StackPanel>
             <StackPanel Grid.Row="1">

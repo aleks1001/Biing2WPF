@@ -1,28 +1,25 @@
 ﻿using Biing2WPF.Biing2;
+using Biing2WPF.Biing2.MemoryReaders;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Biing2WPF.Biing2
 {
-    public class MemoryObject : IB2Serializer
+    public abstract class MemoryObject : IMemoryRefresh
     {
-        public T Deserialize<T>(byte[] array) where T : struct
+        protected uint index;
+        public MemoryObject(uint index, uint pHandle, uint baseAddress, uint tSize)
         {
-            var size = Marshal.SizeOf(typeof(T));
-            var ptr = Marshal.AllocHGlobal(size);
-            Marshal.Copy(array, 0, ptr, size);
-            var s = (T)Marshal.PtrToStructure(ptr, typeof(T));
-            Marshal.FreeHGlobal(ptr);
-            return s;
+            this.index = index;
+            Task.Factory.StartNew(async () =>
+            {
+                while (true)
+                {
+                    OnRefresh(pHandle, baseAddress, tSize);
+                    await Task.Delay(500);
+                }
+            });
         }
-        public byte[] Serialize<T>(T structure) where T : struct
-        {
-            var size = Marshal.SizeOf(typeof(T));
-            var array = new byte[size];
-            var ptr = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr(structure, ptr, true);
-            Marshal.Copy(ptr, array, 0, size);
-            Marshal.FreeHGlobal(ptr);
-            return array;
-        }
+        public abstract void OnRefresh(uint pHandle, uint baseAddress, uint tSize);
     }
 }
