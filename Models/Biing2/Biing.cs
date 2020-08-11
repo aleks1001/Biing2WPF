@@ -1,17 +1,12 @@
-﻿using Biing2WPF.Biing2.MemoryObjects;
-using Biing2WPF.Biing2.MemoryReaders;
-using System;
+﻿using Biing2WPF.Biing2.MemoryReaders;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Biing2WPF.Biing2
 {
     public class Biing2
     {
-        readonly uint baseAddress;
-        readonly uint pHandle;
+        public readonly uint baseAddress;
+        public readonly uint pHandle;
         public HotelReader HotelReader { get; set; }
         public EmployeeReader EmployeeReader { get; set; }
         public TouristReader TouristReader { get; set; }
@@ -27,25 +22,13 @@ namespace Biing2WPF.Biing2
 
         }
 
-        public void GetEmp()
-        {
-            var list = EmployeeReader.ResolveAll<MemoryEmployee>();
-            var one = EmployeeReader.ResolveOne<MemoryEmployee>(13);
-        }
-
         public List<Tourist> GetTourists()
         {
-            return TouristReader.ResolveAll<MemoryTourist>().Select((t, i) => new Tourist(i + 1, t)).ToList();
+            return TouristReader.GetTourists();
         }
-
         public List<Employee> GetEmployees()
         {
-            var list = EmployeeReader.Items;
-            if (list.Count > 0)
-            {
-                return EmployeeReader.Items.Select((e, i) => new Employee(i + 1, e)).ToList();
-            }
-            return new List<Employee>();
+            return EmployeeReader.GetEmployees();
         }
     }
 

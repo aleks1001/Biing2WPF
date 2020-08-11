@@ -1,47 +1,31 @@
-﻿using Biing2WPF.Biing2.MemoryObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Biing2WPF.Biing2.MemoryReaders
 {
-    public class EmployeeReader : BaseReader, IBaseReader
+    public class EmployeeReader
     {
         private static readonly uint tArraySize = 1000;
         private static readonly uint baseOffset = 0x7AE05;
         private static readonly uint tSize = 0x92;
-        public List<MemoryEmployee> Items = new List<MemoryEmployee>();
+        private uint pHandle;
+        private uint baseAddress;
 
-        public EmployeeReader (uint pHandle, uint baseAddress)
+        public EmployeeReader(uint pHandle, uint baseAddress)
         {
-            pProcessHandle = pHandle;
-            BaseAddress = ResolveInt32PtrAddress(baseAddress + baseOffset);
-
-            Task.Factory.StartNew(async () =>
-            {
-                while(true)
-                {
-                    await Task.Delay(200);
-                    Items = ResolveAll<MemoryEmployee>();
-                }
-            });
+            this.pHandle = pHandle;
+            this.baseAddress = Memory.ReadInt32Ptr((int)pHandle, (int)(baseAddress + baseOffset)
+                );
         }
 
-        public List<T> ResolveAll<T>() where T : struct
+        public List<Employee> GetEmployees()
         {
-            List<T> list = new List<T>();
+            List<Employee> list = new List<Employee>();
             for (uint i = 1; i <= tArraySize; i++)
             {
-                list.Add(ResolveOne<T>(i));
+                uint offset = i * tSize + baseAddress;
+                list.Add(new Employee(i, pHandle, offset, tSize));
             }
             return list;
-        }
-
-        public T ResolveOne<T>(uint index) where T : struct
-        {
-            uint offset = index * tSize + BaseAddress;
-            return Serializer.Deserialize<T>(ResolveCustomAddress(offset, tSize));
         }
     }
 }
