@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 
-namespace Biing2WPF
+namespace Biing2WPF.Biing2
 {
     public static class Memory
     {
@@ -15,7 +17,7 @@ namespace Biing2WPF
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
         [DllImport("kernel32.dll")]
-        public static extern bool ReadProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
+        static extern bool ReadProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool WriteProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesWritten);
         public static Process GetProcessByName(string processName)
@@ -54,6 +56,26 @@ namespace Biing2WPF
             byte[] pBuffer = new byte[tSize];
             ReadProcessMemory(pHandle, address, pBuffer, pBuffer.Length, ref bytesRead);
             return pBuffer;
+        }
+        public static void Write(uint pHandle, uint address, byte value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            Write(pHandle, address, buffer, buffer.Length);
+        }
+        public static void Write(uint pHandle, uint address, ushort value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            Write(pHandle, address, buffer, buffer.Length);
+        }
+        public static void Write(uint pHandle, uint address, uint value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            Write(pHandle, address, buffer, buffer.Length);
+        }
+        static void Write(uint pHandle, uint address, byte[] buffer, int tSize)
+        {
+            int bytesWritten = 0;
+            WriteProcessMemory((int)pHandle, (int)address, buffer, tSize, ref bytesWritten);
         }
     }
 }

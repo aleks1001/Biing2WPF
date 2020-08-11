@@ -7,10 +7,14 @@ namespace Biing2WPF.Biing2
 {
     public abstract class MemoryObject : IMemoryRefresh
     {
-        protected uint index;
-        public MemoryObject(uint index, uint pHandle, uint baseAddress, uint tSize)
+        public uint index;
+        protected uint pHandle;
+        protected uint baseAddress;
+        public MemoryObject(uint i, uint pHandle, uint baseAddress, uint tSize)
         {
-            this.index = index;
+            index = i;
+            this.pHandle = pHandle;
+            this.baseAddress = baseAddress;
             Task.Factory.StartNew(async () =>
             {
                 while (true)
