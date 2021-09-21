@@ -1,6 +1,7 @@
 ﻿using BMF.Main;
 using System.Diagnostics;
 using System.Windows;
+using MyBiing2.Repository;
 
 namespace MyBiing2
 {
@@ -14,10 +15,12 @@ namespace MyBiing2
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
             Process process = Memory.GetProcessByName("biing2");
-            uint pHandle = (uint)Memory.OpenProcess(Memory.PROCESS_ALL_ACCESS, false, process.Id);
-            uint baseAddress = (uint)Memory.GetModuleBaseAddress(process, "biing2.exe");
-            DataContext = new MainWindowViewModel(new Repository.Biing2(pHandle, baseAddress));
-            //InitializeComponent();
+            int pHandle = (int)Memory.OpenProcess(Memory.PROCESS_ALL_ACCESS, false, process.Id);
+            int baseAddress = (int)Memory.GetModuleBaseAddress(process, "biing2.exe");
+
+            Biing2 game = new(pHandle, baseAddress);
+            DataContext = new MainWindowViewModel(game);
+            InitializeComponent();
         }
     }
 }

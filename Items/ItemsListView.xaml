@@ -3,18 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MyBiing2.Tourists"
-             xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="MyBiing2.Tourists.TouristsListView"
+             xmlns:local="clr-namespace:MyBiing2.Items"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="MyBiing2.Items.ItemsListView"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
-    <UserControl.Resources>
-        <CollectionViewSource x:Key="myTourists" 
-                              Source="{Binding MyTourists}"
-                              />
-    </UserControl.Resources>
+             d:DesignHeight="450" d:DesignWidth="800">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
-            <b:CallMethodAction TargetObject="{Binding}" MethodName="GetTouristsAsync"/>
+            <b:CallMethodAction TargetObject="{Binding}" MethodName="GetItemsAsync"/>
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <Border Padding="5,5,5,5">
@@ -29,11 +24,11 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Tourists" FontSize="12" FontWeight="DemiBold" VerticalAlignment="Center" Padding="5" />
+                    <TextBlock Text="Items" FontSize="12" FontWeight="DemiBold" VerticalAlignment="Center" Padding="5" />
                 </Grid>
             </Border>
             <StackPanel Grid.Row="1">
-                <DataGrid x:Name="TouristsList" ItemsSource="{Binding MyTourists}" Height="760" />
+                <DataGrid x:Name="ItemsList" ItemsSource="{Binding Objects50}" Height="760" />
             </StackPanel>
         </Grid>
     </Border>

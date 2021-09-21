@@ -1,77 +1,55 @@
 ﻿using BMF.Readers;
-using BMF.Structs;
-using BMF.Main;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using BMF.Services;
+using System.Threading.Tasks;
+using MyBiing2.Repository;
 
 namespace MyBiing2.Models
 {
-    public class Hotel : MemoryStruct, INotifyPropertyChanged
+    public class Hotel : BindableBase
     {
-        #region private members
-        private string name;
-        private int hotelId;
+        private string _name;
+        private int _hotelId;
         private string money;
-        #endregion
-        #region constructor
-        public Hotel(int index, uint pHandle, uint baseAddress)
-            : base(index, pHandle, baseAddress)
-        {
 
+        public Hotel(int index, Biing2 b)
+        {
+            HotelId = index;
+            _ = Start(index, b);
         }
-        #endregion
-        #region public memnber
+
         public string Name
         {
-            get => name;
-            set
-            {
-                if (value == name)
-                {
-                    return;
-                }
-                name = value;
-                OnPropertyChanged();
-            }
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
+
         public int HotelId
         {
-            get => hotelId;
-            set
-            {
-                if (value == hotelId)
-                {
-                    return;
-                }
-                hotelId = value;
-                OnPropertyChanged();
-            }
+            get => _hotelId;
+            set => SetProperty(ref _hotelId, value);
         }
+
         public string Money
         {
             get => money;
-            set
+            set => SetProperty(ref money, value);
+        }
+
+        private Task<Task> Start(int index, Biing2 b)
+        {
+            IHotelRepository repo = b.GetHotelRepo();
+            
+            return Task.Factory.StartNew(async () =>
             {
-                if (value == money)
+                while (true)
                 {
-                    return;
+
+                    var h = await repo.GetHotelAsync(index);
+                    Money = "$" + h.money;
+                    Name = StringReader.GetStringTextByIndex(b.pHandle, b.baseAddress, index + 900);
+                    await Task.Delay(500);
                 }
-                money = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        public override void OnRefresh(uint pHandle, uint baseAddress)
-        {
-            MemoryHotel hotel = HotelReader.GetMemoryHotel(pHandle, baseAddress, Index);
-            Name = StringReader.GetStringTextByIndex(pHandle, baseAddress, Index + 900);
-            HotelId = hotel.index;
-            Money = "$"+hotel.money.ToString();
+            });
         }
     }
 }

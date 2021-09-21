@@ -7,6 +7,7 @@
         xmlns:hotels="clr-namespace:MyBiing2.Hotels"
         xmlns:emp="clr-namespace:MyBiing2.Employees"
         xmlns:tour="clr-namespace:MyBiing2.Tourists"
+        xmlns:item="clr-namespace:MyBiing2.Items"
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1400
         
@@ -20,6 +21,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type hotels:HotelListViewModel}">
             <hotels:HotelListView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type item:ItemsListViewModel}">
+            <item:ItemsListView />
         </DataTemplate>
     </Window.Resources>
     <Grid>
@@ -42,6 +46,8 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Content="Employees"
                             Command="{Binding NavCommand}"
@@ -51,6 +57,10 @@
                             Command="{Binding NavCommand}"
                             CommandParameter="tourists"
                             Grid.Column="2"/>
+                    <Button Content="Items"
+                            Command="{Binding NavCommand}"
+                            CommandParameter="items"
+                            Grid.Column="4"/>
                 </Grid>
             </Border>
             <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" />

@@ -1,69 +1,85 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using BMF.Readers;
-using MyBiing2.Models;
+using BMF.Services;
+using BMF.Structs;
 
 namespace MyBiing2.Repository
 {
     public class Biing2
     {
-        public readonly uint baseAddress;
-        public readonly uint pHandle;
+        private readonly IHotelRepository _hRepo;
+        private readonly IEmployeeRepository _eRepo;
+        private readonly ITouristRepository _tRepo;
+        private readonly IItemRepository _iRepo;
+        private readonly IObject50Repository _o50Repo;
 
-        public Biing2(uint pHandle, uint baseAddress)
+        public readonly int baseAddress;
+        public readonly int pHandle;
+
+        public Biing2(int pHandle, int baseAddress)
         {
             this.pHandle = pHandle;
             this.baseAddress = baseAddress;
+            _hRepo = new HotelRepository(pHandle, baseAddress);
+            _eRepo = new EmployeeRepository(pHandle, baseAddress);
+            _tRepo = new TouristRepository(pHandle, baseAddress);
+            _iRepo = new ItemRepository(pHandle, baseAddress);
+            _o50Repo = new Object50Repository(pHandle, baseAddress);
         }
 
-        public List<Tourist> GetTourists()
+        public IHotelRepository GetHotelRepo()
         {
-            List<Tourist> list = new();
-            int tArraySize = TouristReader.tArraySize;
-            for( int i = 1; i <= tArraySize; i++)
-            {
-                list.Add(new Tourist(i, pHandle, baseAddress));
-            }
-            return list;
+            return _hRepo;
         }
-        public List<Employee> GetEmployees()
+
+        public IEmployeeRepository GetEmployeeRepo()
         {
-            List<Employee> list = new();
-            int eArraySize = EmployeeReader.eArraySize;
-            for (int i = 1; i <= eArraySize; i++)
-            {
-                list.Add(new Employee(i, pHandle, baseAddress));
-            }
-            return list;
+            return _eRepo;
         }
-        public List<Item> GetItems()
+
+        public ITouristRepository GetTouristRepo()
         {
-            List<Item> list = new();
-            uint iArraySize = ItemReader.iArraySize;
-            for (int i = 1; i <= iArraySize; i++)
-            {
-                list.Add(new Item(i, pHandle, baseAddress));
-            }
-            return list;
+            return _tRepo;
         }
-        public List<Hotel> GetHotels()
+
+        public IItemRepository GetItemsRepo()
         {
-            List<Hotel> list = new();
-            uint hArraySize = HotelReader.hArraySize;
-            for (int i = 0; i < hArraySize; i++)
-            {
-                list.Add(new Hotel(i, pHandle, baseAddress));
-            }
-            return list;
+            return _iRepo;
         }
+
+        public IObject50Repository GetObject50Repo()
+        {
+            return _o50Repo;
+        }
+
+        public Task<MemoryHotel[]> GetHotelsAsync()
+        {
+            return _hRepo.GetHotelsAsync();
+        }
+
+        public Task<MemoryEmployee[]> GetEmployeesAsync()
+        {
+            return _eRepo.GetEmployeesAsync();
+        }
+
+        public Task<MemoryTourist[]> GetTouristsAsync()
+        {
+            return _tRepo.GetTouristsAsync();
+        }
+
+        public Task<MemoryItem[]> GetItemsAsync()
+        {
+            return _iRepo.GetItemsAsync();
+        }
+
+        public Task<MemoryObject50[]> GetObjects50Async()
+        {
+            return _o50Repo.GetObjects50Async();
+        }
+
         public string GetTextByIndex(int n)
         {
             return StringReader.GetStringTextByIndex(pHandle, baseAddress, n);
-        }
-
-        public Property GetProperyByIndex(int index)
-        {
-            uint pArraySize = PropertyReader.pArraySize;
-            return new Property(index, pHandle, baseAddress);
         }
     }
 

@@ -9,12 +9,14 @@ namespace MyBiing2.Tourists
     public class TouristsListViewModel : BindableBase
     {
         private int _HotelId;
+        
+        public Biing2 b { get; set; }
 
-        public ObservableCollection<Tourist> Tourists { get; set; }
+        public ObservableCollection<Tourist> Tourists { get; } = new();
 
         public TouristsListViewModel(Biing2 b)
         {
-            Tourists = new ObservableCollection<Tourist>(b.GetTourists());
+            this.b = b;
         }
 
         public ICollectionView MyTourists
@@ -39,6 +41,15 @@ namespace MyBiing2.Tourists
             {
                 SetProperty(ref _HotelId, value);
                 MyTourists.Refresh();
+            }
+        }
+
+        public async void GetTouristsAsync()
+        {
+            var tourists = await b.GetTouristsAsync();
+            for (var i = 1; i <= tourists.Length; i++)
+            {
+                Tourists.Add(new Tourist(i, b));
             }
         }
     }

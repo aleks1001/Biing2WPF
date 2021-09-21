@@ -4,6 +4,7 @@ using MyBiing2.Tourists;
 using MyBiing2.Hotels;
 using System;
 using System.Windows.Input;
+using MyBiing2.Items;
 
 namespace MyBiing2
 {
@@ -15,6 +16,7 @@ namespace MyBiing2
 
         private readonly EmployeesListViewModel employeesListViewModel;
         private readonly TouristsListViewModel touristsListViewModel;
+        private readonly ItemsListViewModel itemsListViewModel;
 
         private BindableBase _currentViewModel;
         public MainWindowViewModel(Biing2 b)
@@ -22,7 +24,9 @@ namespace MyBiing2
             repo = b;
             employeesListViewModel = new EmployeesListViewModel(b);
             touristsListViewModel = new TouristsListViewModel(b);
+            itemsListViewModel = new ItemsListViewModel(b);
             HotelListViewModel = new HotelListViewModel(b);
+
             NavCommand = new RelayCommand<string>(OnNav);
             GetTextCommand = new RelayCommand<string>(onTextSearch);
             HotelListViewModel.UpdateHotelClicked += OnHotelChanged;
@@ -64,13 +68,18 @@ namespace MyBiing2
             {
                 "employees" => employeesListViewModel,
                 "tourists" => touristsListViewModel,
+                "items" => itemsListViewModel,
                 _ => employeesListViewModel,
             };
         }
 
         private void onTextSearch(string textIdx)
         {
-            if (textIdx == null) return;
+            if (textIdx == null)
+            {
+                return;
+            }
+
             DiscoveredText = repo.GetTextByIndex(int.Parse(textIdx));
             TextIndex = string.Empty;
         }

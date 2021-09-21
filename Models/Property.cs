@@ -2,7 +2,7 @@
 {
     public class Property
     {
-        public Property(int index, uint pHandle, uint baseAddress)
+        public Property(int index, int Handle, int baseAddress)
         {
 
         }

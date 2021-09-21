@@ -1,56 +1,53 @@
 ﻿using BMF.Readers;
+using BMF.Services;
+using System.Threading.Tasks;
+using MyBiing2.Repository;
 using BMF.Structs;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace MyBiing2.Models
 {
-    public class Item: INotifyPropertyChanged
+    public class Item: BindableBase
     {
-        #region private members
-        private int nameIndex;
-        private int pictureIndex;
-        #endregion
-        public Item(int index, uint pHandle, uint baseAddress)
+        private string name;
+        private int itemId;
+
+        public Item(int index, MemoryItem item, Biing2 b)
         {
-            MemoryItem item = ItemReader.GetMemoryItem(pHandle, baseAddress, index);
-            Index = index;
-            NameIndex = item.name;
-            PictureIndex = item.picId;
+            ItemId = index;
+            Name = b.GetTextByIndex(item.name);
+            NameId = item.name;
+            PicId = item.picId;
+            Prop10 = item.prop10;
+            Prop11 = item.prop11;
+            Prop12 = item.prop12;
+            Prop13 = item.prop13;
+
+            UseRateHealth1 = item.useRateHealth1;
+            UseRateHealth2 = item.useRateHealth2;
         }
-        #region public properties
-        public int Index { get; set; }
-        public int NameIndex
+
+        public int ItemId
         {
-            get => nameIndex;
-            set
-            {
-                if (value == nameIndex)
-                {
-                    return;
-                }
-                nameIndex = value;
-                OnPropertyChanged();
-            }
+            get => itemId;
+            set => SetProperty(ref itemId, value);
         }
-        public int PictureIndex
+
+        public string Name
         {
-            get => pictureIndex;
-            set
-            {
-                if (value == pictureIndex)
-                {
-                    return;
-                }
-                pictureIndex = value;
-                OnPropertyChanged();
-            }
+            get => name;
+            set => SetProperty(ref name, value);
         }
-        #endregion
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
+
+        public int NameId { get; set; }
+
+        public int PicId { get; set; }
+
+        public int Prop10 { get; set; }
+        public int Prop11 { get; set; }
+        public int Prop12 { get; set; }
+        public int Prop13 { get; set; }
+
+        public int UseRateHealth1 { get; set; }
+        public int UseRateHealth2 { get; set; }
     }
 }

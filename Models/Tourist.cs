@@ -1,165 +1,55 @@
-﻿using BMF.Main;
-using BMF.Readers;
-using BMF.Structs;
+﻿using BMF.Readers;
+using BMF.Services;
+using System.Threading.Tasks;
 using MyBiing2.Repository;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace MyBiing2.Models
 {
-    public class Tourist : MemoryStruct, INotifyPropertyChanged
+    public class Tourist : BindableBase
     {
-        #region private members
-        private Gender gender;
+        private int touristId;
         private int hotelId;
-        private int buildingId;
-        private int iq;
-        private int height;
-        private int weight;
-        private int age;
         private string fullName;
-        private bool isActive;
-        #endregion
-        public Tourist(int index, uint pHandle, uint baseAddress)
-            : base(index, pHandle, baseAddress)
+
+        public Tourist(int index, Biing2 b)
         {
+            TouristId = index;
+            _ = Start(index, b);
         }
-        #region public properties
-        public Gender Gender
-        {
-            get => gender;
-            set
-            {
-                if (value == gender)
-                {
-                    return;
-                }
-                gender = value;
-                OnPropertyChanged();
-            }
-        }
-        public int HotelId
-        {
-            get => hotelId;
-            set
-            {
-                if (value == hotelId)
-                {
-                    return;
-                }
-                hotelId = value;
-                OnPropertyChanged();
-            }
-        }
-        public int BuildingId
-        {
-            get => buildingId;
-            set
-            {
-                if (value == buildingId)
-                {
-                    return;
-                }
-                buildingId = value;
-                OnPropertyChanged();
-            }
-        }
-        public int IQ
-        {
-            get => iq;
-            set
-            {
-                if (value == iq)
-                {
-                    return;
-                }
-                iq = value;
-                OnPropertyChanged();
-            }
-        }
-        public int Height
-        {
-            get => height;
-            set
-            {
-                if (value == height)
-                {
-                    return;
-                }
-                height = value;
-                OnPropertyChanged();
-            }
-        }
-        public int Weight
-        {
-            get => weight;
-            set
-            {
-                if (value == weight)
-                {
-                    return;
-                }
-                weight = value;
-                OnPropertyChanged();
-            }
-        }
-        public int Age
-        {
-            get => age;
-            set
-            {
-                if (value == age)
-                {
-                    return;
-                }
-                age = value;
-                OnPropertyChanged();
-            }
-        }
+
         public string FullName
         {
             get => fullName;
-            set
+            set => SetProperty(ref fullName, value);
+        }
+
+        public int HotelId
+        {
+            get => hotelId;
+            set => SetProperty(ref hotelId, value);
+        }
+
+        public int TouristId
+        {
+            get => touristId;
+            set => SetProperty(ref touristId, value);
+        }
+
+        private Task<Task> Start(int index, Biing2 b)
+        {
+            ITouristRepository repo = b.GetTouristRepo();
+
+            return Task.Factory.StartNew(async () =>
             {
-                if (value == fullName)
+                while (true)
                 {
-                    return;
+
+                    var t = await repo.GetTouristAsync(index);
+                    FullName = StringReader.GetStringTextByIndex(b.pHandle, b.baseAddress, t.name);
+                    HotelId = t.hotelIndex;
+                    await Task.Delay(500);
                 }
-                fullName = value;
-                OnPropertyChanged();
-            }
-        }
-        public bool IsActive
-        {
-            get => isActive;
-            set
-            {
-                if (value == isActive)
-                {
-                    return;
-                }
-                isActive = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        public override void OnRefresh(uint pHandle, uint baseAddress)
-        {
-            MemoryTourist t = TouristReader.GetMemoryTourist(pHandle, baseAddress, Index);
-            Gender = t.isFemale ? Gender.Female : Gender.Male;
-            HotelId = t.hotelIndex;
-            BuildingId = t.buildingId;
-            IQ = t.IQ;
-            Height = t.height;
-            Weight = t.weight;
-            Age = t.age;
-            FullName = StringReader.GetStringTextByIndex(pHandle, baseAddress, t.name);
-            IsActive = t.hotelIndex != 0xFF;
+            });
         }
     }
 }
