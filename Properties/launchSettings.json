@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MyBiing2": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\Users\\alexe\\Downloads\\biing2-d676694be1c4.json"
+      }
+    }
+  }
+}

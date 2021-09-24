@@ -2,8 +2,7 @@
 using MyBiing2.Employees;
 using MyBiing2.Tourists;
 using MyBiing2.Hotels;
-using System;
-using System.Windows.Input;
+using MyBiing2.Property;
 using MyBiing2.Items;
 
 namespace MyBiing2
@@ -17,6 +16,7 @@ namespace MyBiing2
         private readonly EmployeesListViewModel employeesListViewModel;
         private readonly TouristsListViewModel touristsListViewModel;
         private readonly ItemsListViewModel itemsListViewModel;
+        private readonly GameBuildingViewListModel gameBuildingListViewModel;
 
         private BindableBase _currentViewModel;
         public MainWindowViewModel(Biing2 b)
@@ -26,6 +26,7 @@ namespace MyBiing2
             touristsListViewModel = new TouristsListViewModel(b);
             itemsListViewModel = new ItemsListViewModel(b);
             HotelListViewModel = new HotelListViewModel(b);
+            gameBuildingListViewModel = new GameBuildingViewListModel(b);
 
             NavCommand = new RelayCommand<string>(OnNav);
             GetTextCommand = new RelayCommand<string>(onTextSearch);
@@ -69,6 +70,7 @@ namespace MyBiing2
                 "employees" => employeesListViewModel,
                 "tourists" => touristsListViewModel,
                 "items" => itemsListViewModel,
+                "buildings" => gameBuildingListViewModel,
                 _ => employeesListViewModel,
             };
         }
