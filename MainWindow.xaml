@@ -8,6 +8,7 @@
         xmlns:emp="clr-namespace:MyBiing2.Employees"
         xmlns:tour="clr-namespace:MyBiing2.Tourists"
         xmlns:item="clr-namespace:MyBiing2.Items"
+        xmlns:build="clr-namespace:MyBiing2.Property"
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1400
         
@@ -24,6 +25,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type item:ItemsListViewModel}">
             <item:ItemsListView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type build:GameBuildingViewListModel}">
+            <build:GameBuildingViewList />
         </DataTemplate>
     </Window.Resources>
     <Grid>
@@ -48,6 +52,8 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="5"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Content="Employees"
                             Command="{Binding NavCommand}"
@@ -61,6 +67,10 @@
                             Command="{Binding NavCommand}"
                             CommandParameter="items"
                             Grid.Column="4"/>
+                    <Button Content="Buildings"
+                            Command="{Binding NavCommand}"
+                            CommandParameter="buildings"
+                            Grid.Column="6"/>
                 </Grid>
             </Border>
             <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" />

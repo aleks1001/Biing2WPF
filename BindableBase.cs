@@ -8,7 +8,11 @@ namespace MyBiing2
         protected virtual void SetProperty<T>(ref T member, T val,
             [CallerMemberName] string propertyName = null)
         {
-            if (object.Equals(member, val)) return;
+            if (Equals(member, val))
+            {
+                return;
+            }
+
             member = val;
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }

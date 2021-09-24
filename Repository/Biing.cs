@@ -12,12 +12,16 @@ namespace MyBiing2.Repository
         private readonly ITouristRepository _tRepo;
         private readonly IItemRepository _iRepo;
         private readonly IObject50Repository _o50Repo;
+        private readonly IGameBuildingRepository _bgRepo;
 
         public readonly int baseAddress;
         public readonly int pHandle;
 
         public Biing2(int pHandle, int baseAddress)
         {
+
+            int v = StringReader.GetCoordinatesBufferValue(pHandle, baseAddress, 2741);
+
             this.pHandle = pHandle;
             this.baseAddress = baseAddress;
             _hRepo = new HotelRepository(pHandle, baseAddress);
@@ -25,6 +29,7 @@ namespace MyBiing2.Repository
             _tRepo = new TouristRepository(pHandle, baseAddress);
             _iRepo = new ItemRepository(pHandle, baseAddress);
             _o50Repo = new Object50Repository(pHandle, baseAddress);
+            _bgRepo = new GameBuildingRepository(pHandle, baseAddress);
         }
 
         public IHotelRepository GetHotelRepo()
@@ -52,6 +57,11 @@ namespace MyBiing2.Repository
             return _o50Repo;
         }
 
+        public IGameBuildingRepository GetGameBuildingRepo()
+        {
+            return _bgRepo;
+        }
+
         public Task<MemoryHotel[]> GetHotelsAsync()
         {
             return _hRepo.GetHotelsAsync();
@@ -75,6 +85,11 @@ namespace MyBiing2.Repository
         public Task<MemoryObject50[]> GetObjects50Async()
         {
             return _o50Repo.GetObjects50Async();
+        }
+
+        public Task<MemoryGameBuilding[]> GetGameBuildingsAsync()
+        {
+            return _bgRepo.GetGameBuildingsAsync();
         }
 
         public string GetTextByIndex(int n)
